@@ -62,7 +62,7 @@ when that tool is installed.
 > the desktop app, sign in to Claude Code (run `claude`, then `/login`) so the usage-service fallback can work.
 
 Release status: you can download an installer, a portable zip, a Mac disk image or a Linux `.deb` (see
-[section 3](#3-install-and-run)) or build it from source. aiTrack is released under the MIT License (see
+[section 3](#3-install-and-run)). aiTrack is released under the MIT License (see
 `LICENSE`).
 
 ## 2. Requirements
@@ -77,17 +77,16 @@ Release status: you can download an installer, a portable zip, a Mac disk image 
   - **Grok**: the Grok command-line tool (the "Grok CLI"). See [section 5](#5-grok-needs-the-grok-cli).
   - **ChatGPT**: the Codex app or the Codex CLI, signed in with your ChatGPT account (see [ChatGPT (Codex)](#chatgpt-codex)).
   - **Gemini**: the Google Antigravity CLI (`agy`), signed in with your Google account (see [Gemini (Antigravity)](#gemini-antigravity)).
-- To build it yourself: Git and Rust (steps below; on a Mac also the Xcode command line tools; on Linux the build tools and the X11 and Wayland development packages). You do not need Rust to run a downloaded copy.
 
 ## 3. Install and run
 
-You can download a ready-made copy (the easy way) or build it yourself from the source code. The steps below are
+Download a ready-made copy from the Releases page. The steps below are
 for Windows; the Mac steps are in [Install on a Mac](#install-on-a-mac) and the Linux steps in
 [Install on Linux](#install-on-linux-new).
 
 ### Download and install (Windows)
 
-Go to the **Releases** page of the repository (https://github.com/genen/aiTrack/releases) and open the newest
+Go to the **Releases** page of the repository (https://github.com/ai4coo/aiTrack/releases) and open the newest
 release (the one marked **Latest**). Releases marked "Pre-release" are early builds that change faster. Under **Assets** there are three files:
 
 - **`aiTrack-Setup-<version>-win-x64.msi`**: the installer. It installs aiTrack for all users in
@@ -113,8 +112,7 @@ checksums in its notes. To compare: `Get-FileHash .\aiTrack-Setup-<version>-win-
 **Windows Security may block the download.** In October 2026 Microsoft Defender began flagging the unsigned Windows
 downloads (and an installed copy) as `Trojan:Win32/Cloxer`. I believe this is a false positive: the same code built on
 my own PC was not flagged, and 70 of 71 scanners on VirusTotal found nothing in that build. I cannot prove it, and I
-have reported it to Microsoft. If you cannot download the files, build from source (see "Build it yourself"), which
-produces a program Defender did not flag. Do not add an exclusion unless you have decided to trust the download.
+have reported it to Microsoft. Do not add an exclusion unless you have decided to trust the download.
 Compare the SHA256 in the release notes with `Get-FileHash` before you run anything.
 
 **Update.** Run the newer MSI. It replaces the old version and keeps your settings. It refuses to install an older
@@ -129,63 +127,6 @@ uninstalls. It **keeps your data** in `C:\Users\<you>\.aitrack` (history, settin
 you want it gone. Another user of the same PC keeps their own "Start with Windows" entry until they turn that setting
 off. To remove the portable copy, delete its folder (and turn off **Start with Windows** first).
 
-### Build it yourself (Windows)
-
-Skip this if you downloaded aiTrack above. You build it once from the source code, then run the program.
-
-Open **PowerShell** (not the old "Command Prompt") and follow these steps.
-
-**Step 1. Install Git and Rust** (skip what you already have). Either use `winget`, which comes with current
-Windows:
-
-```
-winget install --id Git.Git -e
-winget install --id Rustlang.Rustup -e
-```
-
-or download Git from https://git-scm.com and Rust from https://rustup.rs. The Rust installer may ask you to
-install the "Visual Studio C++ Build Tools" first; accept that, it is what Rust needs to build programs on
-Windows. Close PowerShell and open a new one afterwards so it finds the new tools.
-
-Check that both work:
-
-```
-git --version
-cargo --version
-```
-
-aiTrack needs **Rust 1.89 or newer**. A fresh install gives you the latest. If you already had Rust, run
-`rustup update` first; an older one stops with a message about the required `rust-version`.
-
-**Step 2. Get the code and build it.** Pick a folder you will keep (the example uses `D:\git`):
-
-```
-git clone https://github.com/genen/aiTrack.git D:\git\aiTrack
-cd D:\git\aiTrack
-cargo run --release
-```
-
-The first build downloads and compiles a lot and takes several minutes. When it finishes, the aiTrack window opens.
-
-**Where the program is.** `cargo run --release` builds `aitrack.exe` in `D:\git\aiTrack\target\release\`. You can
-start it from there later by double-clicking it, or from PowerShell with `.\target\release\aitrack.exe`. Pin it to
-the taskbar if you like. Only one aiTrack window runs at a time: starting it again brings the first one to the
-front.
-
-**Update to a newer version.** An old copy that is still running blocks the build ("Access is denied"), so stop it
-first:
-
-```
-cd D:\git\aiTrack
-Get-Process aitrack -ErrorAction SilentlyContinue | Stop-Process
-git pull
-git log --oneline -1
-cargo run --release
-```
-
-The line at the bottom of Settings (and `aitrack --version`) names the version, build number and commit. The
-number in brackets should match the commit that `git log --oneline -1` printed.
-
 **Start with Windows.** In Settings > General, turn on **Start with Windows**. aiTrack then starts when you sign in.
 It does this by adding a value named `aiTrack` under `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
 that points at the exe you are running now. If you later move the exe, turn the setting off and on again.
@@ -194,7 +135,7 @@ that points at the exe you are running now. If you later move the exe, turn the 
 
 Apple silicon only (M1 and later).
 
-**Download.** Once a Mac release is published, open the **Releases** page (https://github.com/genen/aiTrack/releases)
+**Download.** Open the **Releases** page (https://github.com/ai4coo/aiTrack/releases)
 and download `aiTrack-<version>-macos-arm64.dmg` (or the `.zip` with the same app inside). Open the dmg and drag
 **aiTrack** to **Applications**.
 
@@ -202,27 +143,9 @@ and download `aiTrack-<version>-macos-arm64.dmg` (or the `.zip` with the same ap
 stops it the first time. Either right-click the app and choose **Open**, then **Open** again; or try to open it once,
 then go to **System Settings > Privacy & Security** and click **Open Anyway**. You do this once per copy.
 Once signed and notarized releases are published (the release text will say so), the app will open normally
-without this step; see `docs/MAC-SIGNING.md`.
+without this step.
 
-**Build it yourself.** Install Rust from https://rustup.rs (Rust 1.89 or newer; run `rustup update` if you already
-had it) and the Xcode command line tools (`xcode-select --install`). Then, in Terminal:
-
-```
-git clone https://github.com/genen/aiTrack.git
-cd aiTrack
-cargo run --release
-```
-
-That opens the window straight from the build. To get a proper app with the aiTrack icon and name in the Dock:
-
-```
-cargo build --release
-scripts/make-app.sh
-open dist/aiTrack.app
-```
-
-Only one aiTrack runs at a time. Starting it again brings the running window to the front, so quit an old copy
-before you try a new build (see [Troubleshooting](#13-troubleshooting)).
+Only one aiTrack runs at a time. Starting it again brings the running window to the front.
 
 **Start at login.** In Settings > General, turn on **Start at login**. aiTrack writes a LaunchAgent named
 `com.sirgene.aitrack` in `~/Library/LaunchAgents`. macOS shows a "Background Activity" notice, and the change
@@ -235,7 +158,7 @@ applies at your next sign in. If you later move the app, turn the setting off an
 
 Ubuntu 22.04 and newer, x86_64. This is a first release.
 
-**Download and install.** On the **Releases** page (https://github.com/genen/aiTrack/releases) download
+**Download and install.** On the **Releases** page (https://github.com/ai4coo/aiTrack/releases) download
 `aitrack_<version>_amd64.deb` and install it (apt resolves the libraries):
 
 ```
@@ -673,7 +596,7 @@ that Focus assist or Do not disturb is off, before suspecting aiTrack.
 
 **On a Mac.** When you run `aiTrack.app`, alerts are native macOS notifications with the aiTrack icon. The first
 time, macOS asks whether aiTrack may send notifications: allow it (System Settings > Notifications > aiTrack). When
-the program runs outside the app bundle (for example `cargo run --release`), macOS does not let it register for
+the program runs outside the app bundle, macOS does not let it register for
 notifications, so aiTrack falls back to simple banners shown through Script Editor; they work the same but carry
 Script Editor's name and icon, and their sound setting is under Script Editor in System Settings > Notifications.
 A **Focus** mode such as Sleep or Do Not Disturb hides the banners. **Send a test toast** is the quickest check.
@@ -765,7 +688,7 @@ Every request must carry the key. Anyone with the key can read your usage, so tr
 
 **About** (the last section, collapsed at first)
 
-- **aiTrack**, with a link to the project page (github.com/genen/aiTrack) that opens in your default browser. The
+- **aiTrack**, with a link to the project page (github.com/ai4coo/aiTrack) that opens in your default browser. The
   build line is at the bottom of Settings: click it to copy.
 - **Support aiTrack**: PayPal's QR code for the donation page (scan it with your phone) with a **Donate** link under
   it. Clicking the code or the link opens the donation page in your browser.
@@ -837,7 +760,7 @@ never dropped.
 > **Note:** the 90-day cleanup relies on a correct system clock (date and time). If the clock is wrong, for example
 > set months ahead, the cleanup may delete past usage history that is less than 90 days old.
 
-What a reading holds: the percentages, reset times, spend and per-model limits from the Claude usage answer, plus
+What a reading holds: the percentages, reset times, extra usage amounts and per-model limits from the Claude usage answer, plus
 the whole answer from the Claude usage service. It does **not** hold your sign-in token, your organization id,
 your email or anything you wrote. The Grok record holds only the percentage, the reset time and your plan name. The Codex record holds the
 percentages, reset times, plan name, credit balance and per-model limits, never your account id or sign-in. The
@@ -854,7 +777,7 @@ usage command, and when that lists no limits it reads one word from agy's newest
 - To `cli-chat-proxy.grok.com`: the Grok billing question, with the sign-in the Grok CLI stored.
 - To `chatgpt.com`: the ChatGPT usage question, with the sign-in Codex stored.
 - To `raw.githubusercontent.com`: a download of the public price list, about once a day.
-- Clicking **Help** opens this page (https://github.com/genen/aiTrack#readme) in your browser.
+- Clicking **Help** opens this page (https://github.com/ai4coo/aiTrack#readme) in your browser.
 - Starting the Grok CLI (Refresh, or automatically when the Grok sign-in has run out) makes the CLI contact xAI as it always does.
 - Running `agy -p /usage` makes Antigravity ask Google for your usage, as its own usage page does. aiTrack itself sends
   nothing to Google.
@@ -913,7 +836,7 @@ press **Refresh now**.
 
 **Mac: no banners appear.**
 A Focus mode (Sleep, Do Not Disturb, Work) hides banners. Turn it off, or allow aiTrack in the Focus settings. Also
-check System Settings > Notifications > aiTrack. Outside the app (for example `cargo run --release`) the banners
+check System Settings > Notifications > aiTrack. Outside the app bundle the banners
 come from Script Editor, so check its entry there.
 
 **Mac: the new build does not start, or the old window stays.**
@@ -954,8 +877,7 @@ public.
 
 ## 14. Command-line flags
 
-Run `aitrack` with no flags to open the window. The flags below work from PowerShell. With `cargo` put `--`
-before them, for example `cargo run --release -- --sources`.
+Run `aitrack` with no flags to open the window. The flags below work from PowerShell.
 
 | Flag | What it does |
 |---|---|
@@ -1171,7 +1093,7 @@ then more tools (Codex and Gemini are in).
   status bar says "Could not launch Claude desktop". No-op on other platforms.
 - Testing the toasts: `AITRACK_ALERT_INFO_PCT` replaces the 75 % informational threshold (a number, clamped to
   1..89; the 90 %, 100 % and predictive alerts are unchanged). PowerShell:
-  `$env:AITRACK_ALERT_INFO_PCT = "25"; cargo run --release`, and to clear it
+  `$env:AITRACK_ALERT_INFO_PCT = "25"; aitrack`, and to clear it
   `Remove-Item Env:AITRACK_ALERT_INFO_PCT`. The fired-event key follows the number (`p25` instead of `p75`), so
   an earlier `p75` never hides the test alert and a leftover `p25` never hides a real 75 % alert; the toast
   shows the real percentage ("Claude session: 25% used") and still fires once per window. While the override is
@@ -1223,7 +1145,6 @@ then more tools (Codex and Gemini are in).
   test buttons (Info / Warning / Limit) that send a toast in that style. Settings files from older versions that
   still contain `persistent_warnings` or `flash_taskbar` load fine; those keys are ignored and dropped on the
   next save.
-  To regenerate the logos: `cargo run --example make_toast_icons -- assets/toast`.
 - Which vendor panels are shown: a panel appears only when its tool is installed (a stat-only check, repeated
   continually, so installing or removing a tool while aiTrack runs shows or hides its panel without a restart; no
   polling and no alerts for a missing tool). **Claude** is present when the Claude desktop app's data folder exists
@@ -1258,7 +1179,7 @@ then more tools (Codex and Gemini are in).
   files) are read up to 1 MiB; header values with control characters are refused. The environment variables
   that replace the endpoints or the Grok program and its arguments (`AITRACK_USAGE_URL`, `AITRACK_GROK_URL`,
   `AITRACK_GROK_CMD`, `AITRACK_GROK_REFRESH_ARGS`) are test hooks: they only work in builds made with the
-  `test-hooks` feature (`cargo test` turns it on; a normal build or release build ignores them).
+  `test-hooks` feature (release builds ignore them).
 - `AITRACK_SOURCES=desktop-cache,desktop-history,claude-json,oauth` restricts/reorders the sources below.
 
 ### Projects (token / cost usage)
@@ -1448,82 +1369,3 @@ Gemini" (`antigravity_enabled` in settings.json) overrides detection. Alerts wor
 **Opening Codex.** On Windows the badge opens the Store app as the Start menu lists it (entry "Codex" or an
 `OpenAI.Codex_*` AppID, started with `explorer.exe shell:AppsFolder\<AppID>`), else `codex` in a new terminal.
 Only with neither is the package folder's `<family>!App` tried.
-
-## Development
-
-### Disk usage of `target/`
-
-Every change gives each test program, example and the app a new hash-named file in `target/debug/deps`
-(`it-3f9c...`), and cargo never deletes the old ones, so `target/` grows by gigabytes per day of work. (The
-integration tests used to be about 30 separate programs that each linked the whole app; they are now one,
-`tests/it/main.rs`, with a module per former file. Only `tests/alerts_override.rs` is separate because it changes
-process-wide environment variables.) Prune the stale artifacts regularly:
-
-```
-scripts/test.sh                       # cargo test "$@", then prune (use this instead of cargo test)
-scripts/prune-target.sh --dry-run     # show what would go
-scripts/prune-target.sh               # remove superseded builds (not the newest of each test / crate) untouched for 30 minutes, and old incremental data
-scripts/prune-target.sh --all-but-newest   # the same without the 30 minute wait
-scripts/prune-target.sh --emergency   # disk full: also drop old newest builds and dependencies (the next build recompiles them)
-.\scripts\prune-target.ps1 -DryRun    # the same on Windows (-Minutes, -MinSizeMB, -AllButNewest, -Emergency)
-```
-
-The scripts only delete hash-named files larger than 2 MB (`name-<16 hex>.ext`; `--emergency` takes any big file) in `target/{debug,release}/{deps,examples}` (also under
-`target/<triple>/`) and old `incremental/` folders, never anything modified in the last 5 minutes (a build may be
-running), never sources, never follow symlinks, and refuse to run on a folder without cargo's `CACHEDIR.TAG`.
-`--minutes N` changes the age (default 30).
-
-### Lean debug builds
-
-`Cargo.toml` keeps debug builds small: `[profile.dev]` and `[profile.test]` use `debug = "line-tables-only"` (panics and
-backtraces still show file and line, but no variable-level debug info) and `[profile.dev.package."*"]` builds the
-dependencies without any debug info; release is unchanged. Measured on this project (all tests, examples and the
-binary, a clean build in a fresh target folder): the live artifacts shrank from 7.1 GB to 1.4 GB, the test
-executables from 5.9 GB to 0.7 GB, an incremental rebuild after touching one source file from 27 s to 11 s and a
-full `cargo test` run from 34 s to 20 s. `incremental = false` would save another 30 % of disk (2.0 GB to 1.4 GB)
-but made the rebuild after a change 55 % slower (11 s to 18 s), so incremental compilation stays on. If you need
-a real debugger session, build with `CARGO_PROFILE_DEV_DEBUG=2 cargo build`.
-
-### Build the installer
-
-The release files (the MSI, the MSI in a zip and the portable zip) are built by `scripts/build-release.ps1`, and by the GitHub Actions
-workflow `.github/workflows/release-msi.yml`. To build them on your PC you need:
-
-- Rust 1.89 or newer (`cargo build --release` must work);
-- the **.NET SDK**, version 8 or newer (https://dotnet.microsoft.com/download). The WiX Toolset v6 is a NuGet package
-  that `dotnet` downloads by itself, so there is nothing else to install (but it needs internet the first time).
-
-```
-.\scripts\build-release.ps1          # cargo build --release, then the MSI and the zip, both in .\dist
-.\scripts\installer.ps1              # only the MSI (after cargo build --release)
-.\scripts\msi-zip.ps1                # the MSI in a zip (after installer.ps1)
-.\scripts\portable-zip.ps1           # only the zip (after cargo build --release)
-```
-
-The scripts stop with a message if `target\release\aitrack.exe` or the .NET SDK is missing. The MSI version is the
-version in `Cargo.toml` without the `-beta` suffix and padded to four parts (`0.1.4-beta` becomes `0.1.4.0`). The
-installer source is in `installer\` (`Package.wxs`, `aiTrack.Installer.wixproj`). `installer\License.rtf` (the
-license page) is generated from `LICENSE`: after changing `LICENSE`, run `python installer\make-license-rtf.py`.
-
-**Install scope.** The MSI installs for all users only. WiX has a dialog set (`WixUI_Advanced`) that offers "just me",
-but its logic shows that choice only to a setup that is already elevated and defaults to "just me" for a normal
-double-click, the opposite of what we want. People who cannot or do not want to
-use an administrator account use the portable zip.
-
-**Making a release.**
-
-1. Raise the version in `Cargo.toml` (and `Cargo.lock`) and merge to `main`.
-2. Tag that commit `v<version>` exactly, for example `v0.1.4-beta`, and push the tag (or run the workflow by hand
-   from the Actions tab with that tag). The workflow stops if the tag does not match `Cargo.toml`.
-3. The workflow checks formatting, clippy and the tests, builds the MSI and the zip, and publishes the release. A
-   `-beta` version becomes a pre-release. It never overwrites files of an existing release unless you run it by hand
-   with **Replace** ticked.
-
-The files are not code-signed yet.
-
-### Tests
-
-`cargo test` (or `scripts/test.sh`) runs the unit tests, the integration tests in `tests/it/` (one module per
-topic: `tests/it/cache.rs`, `tests/it/stats.rs`, ...) and `tests/alerts_override.rs`. A single module:
-`cargo test --test it stats::`. Without the window code: `cargo test --no-default-features`. Windows build check:
-`cargo check --target x86_64-pc-windows-gnu --all-targets`.

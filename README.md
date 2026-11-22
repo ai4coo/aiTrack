@@ -62,7 +62,7 @@ when that tool is installed.
 > the desktop app, sign in to Claude Code (run `claude`, then `/login`) so the usage-service fallback can work.
 
 Release status: you can download an installer, a portable zip, a Mac disk image or a Linux `.deb` (see
-[section 3](#3-install-and-run)). aiTrack is released under the MIT License (see
+[section 3](#3-install-and-run)). aiTrack is released under the MIT License with the Commons Clause (see
 `LICENSE`).
 
 ## 2. Requirements
@@ -91,7 +91,7 @@ release (the one marked **Latest**). Releases marked "Pre-release" are early bui
 
 - **`aiTrack-Setup-<version>-win-x64.msi`**: the installer. It installs aiTrack for all users in
   `C:\Program Files\aiTrack`, adds Start menu and desktop shortcuts, and asks for administrator permission.
-  Double-click it, accept the license (MIT), pick the folder, and click **Install**. On the last page,
+  Double-click it, accept the license, pick the folder, and click **Install**. On the last page,
   **Run after install?** is ticked: leave it ticked to start aiTrack at once.
 - **`aiTrack-Setup-<version>-win-x64-msi.zip`**: the same installer inside a zip, with this README (`README.md`, and
   `README.pdf` to read offline), `LICENSE` and the pictures in `docs\img`. If your browser blocks the `.msi`
@@ -792,7 +792,9 @@ three hosts above, over HTTPS, and are never written to any file or log by aiTra
 
 ### License, notices and policies
 
-aiTrack is released under the MIT License ([LICENSE](LICENSE)). The open-source
+aiTrack is released under the MIT License with the Commons Clause License Condition v1.0 ([LICENSE](LICENSE)), copyright 2026 Take Two Partners, LLC. You may use, copy and share aiTrack, but the Commons Clause does not let you sell it, or a product or service whose value comes mainly from it. This license applies from the release after 0.6.13. Version 0.6.13 and earlier releases keep the MIT License they shipped with.
+
+The open-source
 crates it is built from are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). A short privacy statement is in
 [PRIVACY.md](PRIVACY.md) and the code signing policy (Windows signing is planned, not yet in place) is in
 [CODE-SIGNING-POLICY.md](CODE-SIGNING-POLICY.md).

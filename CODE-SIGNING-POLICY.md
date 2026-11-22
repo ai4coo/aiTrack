@@ -21,11 +21,11 @@ The macOS app is signed with an Apple Developer ID and notarized by Apple.
 
 ## Roles
 
-- **Authors** (who write the code that is built and signed): the project owner, Sir Gene (GitHub:
-  [genen](https://github.com/genen)). Currently the only maintainer.
-- **Reviewers** (who review changes before they are merged into `main`): the project owner (genen), currently the
+- **Authors** (who write the code that is built and signed): the project owner, Take Two Partners, LLC (GitHub:
+  [ai4coo](https://github.com/ai4coo)). Currently the only maintainer.
+- **Reviewers** (who review changes before they are merged into `main`): the project owner, currently the
   only maintainer.
-- **Approvers** (who approve each signing request): the project owner (genen), currently the only maintainer. Every
+- **Approvers** (who approve each signing request): the project owner, currently the only maintainer. Every
   release is approved by the project owner before it is started.
 
 The maintainer's GitHub account is protected with two-factor authentication, and the same will apply to the SignPath

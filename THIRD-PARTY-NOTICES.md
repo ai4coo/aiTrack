@@ -1,6 +1,6 @@
 # Third-party notices
 
-aiTrack is released under the **MIT License** (see [LICENSE](LICENSE)). It is built from the open-source Rust crates listed below. Each crate stays under its own license; the full license text of a crate is in its source package (https://crates.io/crates/NAME/VERSION) and in the repository linked on the same row.
+aiTrack is released under the **MIT License with the Commons Clause** (see [LICENSE](LICENSE)). It is built from the open-source Rust crates listed below. Each crate stays under its own license; the full license text of a crate is in its source package (https://crates.io/crates/NAME/VERSION) and in the repository linked on the same row.
 
 Where a crate offers several licenses (`A OR B`), aiTrack uses it under a permissive one (for example MIT or Apache-2.0). No crate below is used under a copyleft license.
 

@@ -39,4 +39,4 @@ log by aiTrack. Starting the Grok CLI (the Refresh button) makes that CLI contac
 ## Updates and contact
 
 aiTrack does not check for updates by itself. Questions: aitrack@sirgene.com. Source and issues:
-https://github.com/genen/aiTrack.
+https://github.com/ai4coo/aiTrack.

@@ -2,22 +2,36 @@
 
 ## Windows
 
-Windows releases are planned to be signed with a certificate provided free of charge to open-source projects by the
-[SignPath Foundation](https://signpath.org), using the [SignPath.io](https://signpath.io) service. **Until that
-application is approved, Windows downloads are not signed**, and Windows SmartScreen may show "Unknown publisher"
-(choose "Run anyway"). This file will be updated when signing starts.
+The Windows installer (`.msi`, also offered as `-msi.zip`), the portable `.zip` and the program in them
+(`aitrack.exe`) are not code-signed yet, so Windows SmartScreen may show "Unknown publisher" the first time (choose
+"Run anyway"). Check the download against `SHA256SUMS` (below) before you open it. This file will be updated when
+signing starts.
 
 ## macOS
 
-The macOS app is signed with an Apple Developer ID and notarized by Apple.
+The macOS app (`.dmg` and `.zip`) is signed with an Apple Developer ID and notarized by Apple.
 
-## How a signed build is made
+## Linux
 
-- The build runs on GitHub Actions from the public source in this repository
-  (`.github/workflows/release-msi.yml` for Windows, `.github/workflows/release-macos.yml` for macOS). Nothing built
-  on a developer's own computer is published.
-- A release is started by hand by the project owner with a version tag. Signing happens only in that run.
-- The signing keys and passwords are kept in GitHub Actions secrets and are never printed or stored in the repository.
+The `.deb` package is not signed. Check it against `SHA256SUMS` before you install it.
+
+## How a release is made
+
+- Each build is made by the project owner on their own computer from the private source. No hosted build service
+  is used.
+- The owner approves each release and uploads the files by hand to
+  [Releases](https://github.com/ai4coo/aiTrack/releases), together with `SHA256SUMS`.
+- Signing keys and passwords stay on the owner's build computers and are never stored in a repository.
+
+## Checking a download
+
+`SHA256SUMS` on the release lists the SHA-256 checksum of every file.
+
+- **Windows** (PowerShell): `Get-FileHash .\aiTrack-Setup-<version>-win-x64.msi -Algorithm SHA256`
+- **macOS**: `shasum -a 256 aiTrack-<version>-macos-arm64.dmg`
+- **Linux**: `sha256sum -c --ignore-missing SHA256SUMS`
+
+Compare the result with the line for that file in `SHA256SUMS`.
 
 ## Roles
 
@@ -28,13 +42,12 @@ The macOS app is signed with an Apple Developer ID and notarized by Apple.
 - **Approvers** (who approve each signing request): the project owner, currently the only maintainer. Every
   release is approved by the project owner before it is started.
 
-The maintainer's GitHub account is protected with two-factor authentication, and the same will apply to the SignPath
-account once it exists.
+The maintainer's GitHub account is protected with two-factor authentication.
 
 ## Privacy
 
-See [PRIVACY.md](PRIVACY.md): aiTrack does not transfer any information to other networked systems except the three
-requests listed there, which are needed for it to work.
+See [PRIVACY.md](PRIVACY.md): aiTrack does not transfer any information to other networked systems except the requests
+listed there, which are needed for it to work.
 
 ## Reporting a problem
 

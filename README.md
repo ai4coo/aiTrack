@@ -62,8 +62,9 @@ when that tool is installed.
 > the desktop app, sign in to Claude Code (run `claude`, then `/login`) so the usage-service fallback can work.
 
 Release status: you can download an installer, a portable zip, a Mac disk image or a Linux `.deb` (see
-[section 3](#3-install-and-run)). aiTrack is released under the MIT License with the Commons Clause (see
-`LICENSE`).
+[section 3](#3-install-and-run)). aiTrack is released under the MIT License with the Commons Clause License Condition v1.0 (see
+`LICENSE`): you may use, copy, change and share it, but not sell it or a service whose value
+comes mainly from it.
 
 ## 2. Requirements
 
@@ -80,8 +81,8 @@ Release status: you can download an installer, a portable zip, a Mac disk image 
 
 ## 3. Install and run
 
-Download a ready-made copy from the Releases page. The steps below are
-for Windows; the Mac steps are in [Install on a Mac](#install-on-a-mac) and the Linux steps in
+Download a ready-made copy from the **Releases** page (https://github.com/ai4coo/aiTrack/releases). The steps below
+are for Windows; the Mac steps are in [Install on a Mac](#install-on-a-mac) and the Linux steps in
 [Install on Linux](#install-on-linux-new).
 
 ### Download and install (Windows)
@@ -91,7 +92,7 @@ release (the one marked **Latest**). Releases marked "Pre-release" are early bui
 
 - **`aiTrack-Setup-<version>-win-x64.msi`**: the installer. It installs aiTrack for all users in
   `C:\Program Files\aiTrack`, adds Start menu and desktop shortcuts, and asks for administrator permission.
-  Double-click it, accept the license, pick the folder, and click **Install**. On the last page,
+  Double-click it, accept the license (MIT with the Commons Clause), pick the folder, and click **Install**. On the last page,
   **Run after install?** is ticked: leave it ticked to start aiTrack at once.
 - **`aiTrack-Setup-<version>-win-x64-msi.zip`**: the same installer inside a zip, with this README (`README.md`, and
   `README.pdf` to read offline), `LICENSE` and the pictures in `docs\img`. If your browser blocks the `.msi`
@@ -139,13 +140,10 @@ Apple silicon only (M1 and later).
 and download `aiTrack-<version>-macos-arm64.dmg` (or the `.zip` with the same app inside). Open the dmg and drag
 **aiTrack** to **Applications**.
 
-**First open.** The app is only ad-hoc signed: it has no Apple developer signature and is not notarized, so macOS
-stops it the first time. Either right-click the app and choose **Open**, then **Open** again; or try to open it once,
-then go to **System Settings > Privacy & Security** and click **Open Anyway**. You do this once per copy.
-Once signed and notarized releases are published (the release text will say so), the app will open normally
-without this step.
+**First open.** The app is signed with an Apple Developer ID and notarized by Apple, so it opens normally.
 
-Only one aiTrack runs at a time. Starting it again brings the running window to the front.
+Only one aiTrack runs at a time. Starting it again brings the running window to the front, so quit an old copy
+before you open a new one (see [Troubleshooting](#13-troubleshooting)).
 
 **Start at login.** In Settings > General, turn on **Start at login**. aiTrack writes a LaunchAgent named
 `com.sirgene.aitrack` in `~/Library/LaunchAgents`. macOS shows a "Background Activity" notice, and the change
@@ -244,10 +242,13 @@ Grok shows one bar: **Weekly**, the credit pool of your current billing period. 
 
 1. **Live billing.** It asks Grok's billing service (the same one the Grok CLI uses) with the sign-in the CLI
    stored in `~/.grok/auth.json`.
-2. **The CLI's log.** The CLI writes a line to `~/.grok/logs/unified.jsonl` each time it fetches billing. aiTrack
+2. **Ask the Grok CLI.** If live billing does not answer, aiTrack starts the Grok CLI for a moment in the background
+   (`grok agent stdio`) and asks it for the same billing numbers. The CLI uses its own sign-in, sends no prompt and
+   uses no credits, and aiTrack ends it as soon as it answers.
+3. **The CLI's log.** The CLI writes a line to `~/.grok/logs/unified.jsonl` each time it fetches billing. aiTrack
    reads the newest one. It is only as fresh as the last time the CLI ran.
 
-Both need the Grok CLI. See the next section.
+All three need the Grok CLI. See the next section.
 
 #### The Grok Bot bar (macOS and Windows)
 
@@ -312,8 +313,8 @@ is billed in Google Cloud. When agy lists no limits and its own log says it sign
 says **Likely enterprise account** after its name; otherwise its tooltip says "No usage data from Antigravity". The
 last reading stays either way.
 
-aiTrack runs `agy -p /usage --output-format json` in the background at each update (every 15 minutes by default, and
-when you press refresh). That is `agy`'s own read-only usage command: it sends no prompt and uses no quota. aiTrack
+aiTrack runs `agy -p /usage --output-format json` in the background at each update (at least every 15 minutes, even
+when the refresh interval is longer, and when you press refresh). That is `agy`'s own read-only usage command: it sends no prompt and uses no quota. aiTrack
 never reads Antigravity's sign-in, which stays in your system's credential store.
 
 The Gemini block appears when `agy` is installed: `C:\Users\<you>\AppData\Local\agy\bin\agy.exe` on Windows,
@@ -596,7 +597,7 @@ that Focus assist or Do not disturb is off, before suspecting aiTrack.
 
 **On a Mac.** When you run `aiTrack.app`, alerts are native macOS notifications with the aiTrack icon. The first
 time, macOS asks whether aiTrack may send notifications: allow it (System Settings > Notifications > aiTrack). When
-the program runs outside the app bundle, macOS does not let it register for
+the program runs outside the app bundle (for example the bare `aitrack` program), macOS does not let it register for
 notifications, so aiTrack falls back to simple banners shown through Script Editor; they work the same but carry
 Script Editor's name and icon, and their sound setting is under Script Editor in System Settings > Notifications.
 A **Focus** mode such as Sleep or Do Not Disturb hides the banners. **Send a test toast** is the quickest check.
@@ -664,18 +665,20 @@ Lets scripts and AI assistants read your usage. It is read-only: nothing can be 
   The first time you turn it on, expect a popup: macOS may ask whether aiTrack may accept incoming network
   connections (click **Allow**), and Windows Defender Firewall may ask whether aiTrack may use networks (click **Allow
   access**). Until you do, other computers cannot reach this one; aiTrack on this computer still works.
+- **Address:** this computer's address for scripts (`http://127.0.0.1:47124/api/v1/summary`); **Copy** copies it.
+- **MCP connector:** the connector address with the key (`http://127.0.0.1:47124/mcp?key=<key>`); **Copy** copies it.
+  For Claude and Grok, put your public address (**Phone access**) in front of `/mcp?key=<key>`.
+- **Key:** made when aiTrack first starts, so it is always there, even with the API off. **Copy** copies it; **New**
+  makes a new key and the old one stops working at once. The field under it shows the key: paste the same key on all
+  your computers so they find each other (32 letters and digits).
 - **Find others:** also answer for every other aiTrack with the same key on your local network or your own Tailscale
   devices. On by default.
-- **Key:** made when you first turn the API on and shown in the field. **Copy key** copies it; paste another
-  computer's key into the field to use that one instead, so all your computers share one key. **New** makes a new
-  key; the old one stops working at once.
-- **Copy address**, **Copy MCP URL**, **Copy Claude Code line:** copy buttons for the setups in section 15.
-- **Phone access (Tailscale Funnel):** gives this computer a public HTTPS address for Claude, Grok or ChatGPT on your
-  phone; **Copy phone connector** copies it.
 - **Add by address:** computers on another VPN or across the internet, as `host` or `host:port` (they need the same
-  key).
-- **Computers:** this computer and every other one found, with a green dot when it answers. One that stopped
-  answering shows an orange dot and "can't be reached since ..., may be disconnected"; **Forget** removes it.
+  key). **Remove** takes one off the list.
+- **Phone access (Tailscale Funnel):** gives this computer a public HTTPS address for Claude, Grok or ChatGPT on your
+  phone; **Copy phone connector** copies the connector address. The key is still needed.
+- **Computers:** under **Connected**, this computer and every other one that answers now. Under **Not connected**,
+  computers that answered before but not now, with when each was last seen; **−** removes one from the list.
 
 Every request must carry the key. Anyone with the key can read your usage, so treat it like a password.
 
@@ -737,8 +740,7 @@ aiTrack keeps its own files in `C:\Users\<you>\.aitrack\` (written `~/.aitrack`)
 | `usage-grok-bot.jsonl` | Grok Bot weekly readings (records with a `bot_weekly` field), appended when the value changes and at most every 15 minutes otherwise |
 | `*.jsonl.bak` | the history file as it was before the last cleanup (replaced at the next one) |
 | `*.jsonl.corrupt` | unreadable lines set aside by a cleanup, if there were any |
-| `settings.json` | your settings |
-| `api.json` | the local API's settings: on/off, the key, this computer's id, addresses you added and computers found (only when you turned the API on) |
+| `settings.json` | your settings, including the local API's (on/off, the key, this computer's id, addresses you added and computers found); aiTrack 0.6.16 and older kept those in `api.json`, which is moved in at the next start |
 | `alerts.json`, `alerts-grok.json`, `alerts-codex.json`, `alerts-antigravity.json` | which alerts were already sent |
 | `transcript-index.json` | a summary of the transcript files for the Stats view |
 | `pricing-cache.json` | the downloaded price list |
@@ -760,7 +762,7 @@ never dropped.
 > **Note:** the 90-day cleanup relies on a correct system clock (date and time). If the clock is wrong, for example
 > set months ahead, the cleanup may delete past usage history that is less than 90 days old.
 
-What a reading holds: the percentages, reset times, extra usage amounts and per-model limits from the Claude usage answer, plus
+What a reading holds: the percentages, reset times, extra-usage amounts and per-model limits from the Claude usage answer, plus
 the whole answer from the Claude usage service. It does **not** hold your sign-in token, your organization id,
 your email or anything you wrote. The Grok record holds only the percentage, the reset time and your plan name. The Codex record holds the
 percentages, reset times, plan name, credit balance and per-model limits, never your account id or sign-in. The
@@ -792,9 +794,9 @@ three hosts above, over HTTPS, and are never written to any file or log by aiTra
 
 ### License, notices and policies
 
-aiTrack is released under the MIT License with the Commons Clause License Condition v1.0 ([LICENSE](LICENSE)), copyright 2026 Take Two Partners, LLC. You may use, copy and share aiTrack, but the Commons Clause does not let you sell it, or a product or service whose value comes mainly from it. This license applies from the release after 0.6.13. Version 0.6.13 and earlier releases keep the MIT License they shipped with.
-
-The open-source
+aiTrack is released under the MIT License with the Commons Clause License Condition v1.0 ([LICENSE](LICENSE)): you may use,
+copy, change and share it, but not sell it or a service whose value comes mainly from it. Versions up to
+0.6.19 were released under the plain MIT License and keep it. The open-source
 crates it is built from are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). A short privacy statement is in
 [PRIVACY.md](PRIVACY.md) and the code signing policy (Windows signing is planned, not yet in place) is in
 [CODE-SIGNING-POLICY.md](CODE-SIGNING-POLICY.md).
@@ -838,7 +840,7 @@ press **Refresh now**.
 
 **Mac: no banners appear.**
 A Focus mode (Sleep, Do Not Disturb, Work) hides banners. Turn it off, or allow aiTrack in the Focus settings. Also
-check System Settings > Notifications > aiTrack. Outside the app bundle the banners
+check System Settings > Notifications > aiTrack. Outside the app (for example the bare `aitrack` program) the banners
 come from Script Editor, so check its entry there.
 
 **Mac: the new build does not start, or the old window stays.**
@@ -904,8 +906,8 @@ its numbers are.
 
 ### 1. Turn on the API
 
-On the computer that will answer, open **Settings > API** and turn on **Local API**. Click **Copy key** and keep the key
-somewhere safe.
+On the computer that will answer, open **Settings > API** and turn on **Local API**. The key was made when aiTrack
+first started; click **Copy** next to **Key** and keep it somewhere safe.
 
 ### 2. Gather your other computers (optional)
 
@@ -913,9 +915,9 @@ One aiTrack can answer for all the others, so a single connector covers every co
 only one special computer. This helps when your computers track different AIs, for example one runs Grok and another
 Claude.
 
-1. On the computer from step 1, click **Copy key**.
+1. On the computer from step 1, click **Copy** next to **Key**.
 2. On each other computer, open **Settings > API**, turn on **Local API** and **Other computers**, and paste that key
-   into the **Key** field. Allow the firewall popup if one appears (see **Settings > API** in section 10), or the
+   into the key field. Allow the firewall popup if one appears (see **Settings > API** in section 10), or the
    computer stays invisible to the others.
 
 Then pick how they reach each other; these can be mixed:
@@ -926,7 +928,7 @@ Then pick how they reach each other; these can be mixed:
 | On [Tailscale](https://tailscale.com) | Nothing more: **Find others** also looks at your own Tailscale devices, wherever they are. |
 | On another VPN (WireGuard, OpenVPN, ZeroTier and so on) or reachable across the internet | Add each one under **Add by address** on the gathering computer, as `host` or `host:port` (its VPN address or name). |
 
-Found computers show up under **Computers** in **Settings > API** within about a minute. A new computer joins the same
+Found computers show up under **Connected** in **Settings > API** within about a minute. A new computer joins the same
 way.
 
 Your plan usage is the same on every computer, so aiTrack **never adds computers up**: for each AI it reports the
@@ -935,7 +937,7 @@ those are listed per computer. A computer that stops answering is named in the a
 disconnected").
 
 The key itself never leaves your computer: questions to your other computers are signed with it instead, and a
-computer is only used once it proved it holds the same key. Each computer's clock must be right to within two
+computer is only used once it proved it holds the same key. Each computer's clock must be right to within five
 minutes.
 
 ### 3. Give it a public address (for phone apps)
@@ -967,8 +969,6 @@ that forwards HTTPS to that port works. Two common ones:
   `/mcp?key=<key>`. For a lasting address on your own domain, create a named tunnel in the Cloudflare dashboard that
   points a hostname at `http://127.0.0.1:47124`.
 
-Keep the key secret: anyone with the connector address can read your usage.
-
 ### 4. Add the connector
 
 Apps that run on their own servers (Claude, Grok, ChatGPT) need the public address from step 3. Tools that run on your
@@ -985,7 +985,7 @@ change from time to time.
   settings > Developer mode** (in a work account an admin may need to allow it). Then **Create** a connector, give it
   a name, paste the connector address and pick **No authentication**. In each chat, add aiTrack from the **+** menu
   before asking.
-- **Claude Code** (**Copy Claude Code line** copies this with your key):
+- **Claude Code:**
 
   ```
   claude mcp add --transport http aitrack http://127.0.0.1:47124/mcp --header "X-Api-Key: <key>"
@@ -1015,9 +1015,6 @@ change from time to time.
 On another computer, replace `http://127.0.0.1:47124/mcp` with the public address without `?key=...` (the header
 carries the key), or with `http://<computer>.<your-tailnet>.ts.net:47124/mcp` when **Other computers** is on.
 
-The address carries the key, so do not share it. If it leaks, click **New** in **Settings > API** and update the
-connector.
-
 On the computer running aiTrack, a tool can also start `aitrack --mcp` itself: no key and no port, this computer's
 readings only. For example
 `claude mcp add --scope user aitrack -- "C:\Program Files\aiTrack\aitrack.exe" --mcp` (on a Mac the program is
@@ -1030,10 +1027,10 @@ readings only. For example
 | `get_summary` | one line per AI: available or at its limit (until when), percent used and reset time of each window, age of the reading |
 | `check_ai_availability` | per AI: whether it can be used now, which limit blocks it, when it is available again, and what the plan still allows past the limit |
 | `get_ai_usage` | per AI: plan, each window with percent used and left, reset time, pace, projected percent at reset, per-model limits, credits |
-| `list_machines` | every computer, whether it answers, and when one that does not last answered |
+| `list_machines` | this computer first, then every other one found, whether each answers right now, and its short summary |
 
-Each takes an optional AI (`claude`, `chatgpt`, `gemini` or `grok`) and an optional computer name; without a name it
-answers for all your computers. Times are UTC; the assistant turns them into your time.
+Each takes an optional AI (`claude`, `chatgpt`, `gemini` or `grok`) and an optional computer name from
+`list_machines`, or `all` for every computer; without a name it answers for the computer aiTrack runs on. Times are UTC; the assistant turns them into your time.
 
 For scripts, the same answers are plain HTTP with the key (`Authorization: Bearer <key>`, `X-Api-Key: <key>` or
 `?key=<key>`): `GET /api/v1/summary.txt` (one line per AI as text), `/api/v1/summary`, `/api/v1/availability`,
@@ -1095,7 +1092,7 @@ then more tools (Codex and Gemini are in).
   status bar says "Could not launch Claude desktop". No-op on other platforms.
 - Testing the toasts: `AITRACK_ALERT_INFO_PCT` replaces the 75 % informational threshold (a number, clamped to
   1..89; the 90 %, 100 % and predictive alerts are unchanged). PowerShell:
-  `$env:AITRACK_ALERT_INFO_PCT = "25"; aitrack`, and to clear it
+  `$env:AITRACK_ALERT_INFO_PCT = "25"; .\aitrack.exe`, and to clear it
   `Remove-Item Env:AITRACK_ALERT_INFO_PCT`. The fired-event key follows the number (`p25` instead of `p75`), so
   an earlier `p75` never hides the test alert and a leftover `p25` never hides a real 75 % alert; the toast
   shows the real percentage ("Claude session: 25% used") and still fires once per window. While the override is
@@ -1181,7 +1178,7 @@ then more tools (Codex and Gemini are in).
   files) are read up to 1 MiB; header values with control characters are refused. The environment variables
   that replace the endpoints or the Grok program and its arguments (`AITRACK_USAGE_URL`, `AITRACK_GROK_URL`,
   `AITRACK_GROK_CMD`, `AITRACK_GROK_REFRESH_ARGS`) are test hooks: they only work in builds made with the
-  `test-hooks` feature (release builds ignore them).
+  `test-hooks` feature (`cargo test` turns it on; a normal build or release build ignores them).
 - `AITRACK_SOURCES=desktop-cache,desktop-history,claude-json,oauth` restricts/reorders the sources below.
 
 ### Projects (token / cost usage)
